@@ -1,0 +1,28 @@
+Tắt 1 đường Serial giữa R1 và R2
+
+Trên R1:
+interface s0/3/0
+shutdown
+
+Trên R2:
+interface s0/3/0
+shutdown
+
+Kiểm tra định tuyến OSPF
+
+Trên cả hai router:
+	show ip route ospf
+
+
+Ping kiểm tra
+Thực hiện từ LAN S1 (PC1) đến Loopback R2 
+
+PC1> ping 192.168.40.1
+
+
+Quan sát Tunnel
+
+Trên R1:
+	show ip interface brief | include Tunnel
+
+

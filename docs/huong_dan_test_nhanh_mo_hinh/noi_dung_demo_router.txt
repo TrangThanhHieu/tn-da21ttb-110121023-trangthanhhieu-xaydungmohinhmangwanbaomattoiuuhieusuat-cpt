@@ -1,0 +1,59 @@
+Kết nối vật lý trên R1 và R2
+R1
+interface s0/3/0
+ip address 10.0.12.1 255.255.255.252
+no shutdown
+
+R2
+interface s0/3/0
+ip address 10.0.12.2 255.255.255.252
+no shutdown
+
+Cấu hình GRE Tunnel
+R1
+interface tunnel1
+ip address 172.16.100.1 255.255.255.0
+tunnel source s0/3/0
+tunnel destination 10.0.12.2
+no shutdown
+
+R2
+interface tunnel1
+ip address 172.16.100.2 255.255.255.0
+tunnel source s0/3/0
+tunnel destination 10.0.12.1
+no shutdown
+
+Cấu hình Loopback trên R2
+ 
+interface loopback1
+ip address 192.168.40.1 255.255.255.255
+
+Cấu hình OSPF
+R1
+router ospf 1
+network 10.0.12.0 0.0.0.3 area 0
+network 172.16.100.0 0.0.0.255 area 0
+ 
+R2
+router ospf 1
+network 10.0.12.0 0.0.0.3 area 0
+network 172.16.100.0 0.0.0.255 area 1
+network 192.168.40.1 0.0.0.0 area 1
+
+Kiểm Tra Kết quả
+
+Kiểm tra trạng thái cổng R1 và R2
+	show ip interface brief
+
+kiểm tra Tunnel
+	R1#  ping 172.16.100.2
+	R2#  ping 172.16.100.1
+
+Kiểm tra OSPF
+	show ip ospf neighbor
+	show ip route ospf
+
+
+
+
